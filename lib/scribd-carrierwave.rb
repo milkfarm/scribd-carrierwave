@@ -20,6 +20,10 @@ module ScribdCarrierWave
       document.destroy if !document.nil?
     end
     
+    def load_ipaper_document(id)
+      scribd_user.find_document(id) rescue nil
+    end
+    
     def full_path uploader
       if uploader.url =~ /^http(s?):\/\//
         uploader.url
@@ -77,6 +81,12 @@ module ScribdCarrierWave
       def ipaper_access_key
         self.model.send("#{self.mounted_as.to_s}_ipaper_access_key")
       end
+      
+      # Responds the Scribd::Document associated with this model, or nil if it does not exist.
+      def ipaper_document
+        @document ||= ScribdCarrierWave::load_ipaper_document(ipaper_id)
+      end
+    
       
       private 
       
