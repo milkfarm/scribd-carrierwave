@@ -74,14 +74,14 @@ module ScribdCarrierWave
         id = options.delete(:id)
         <<-END
           <script type="text/javascript" src="http://www.scribd.com/javascripts/scribd_api.js"></script>
-          <div id="embedded_flash#{id}">#{options.delete(:alt)}</div>
+          <div id="embedded_doc#{id}">#{options.delete(:alt)}</div>
           <script type="text/javascript">
             var scribd_doc = scribd.Document.getDoc(#{ipaper_id}, '#{ipaper_access_key}');
             scribd_doc.addParam( 'jsapi_version', 2 );
             #{options.map do |k,v|
                 "          scribd_doc.addParam('#{k.to_s}', #{v.is_a?(String) ? "'#{v.to_s}'" : v.to_s});"
               end.join("\n")}
-            scribd_doc.write("embedded_flash#{id}");
+            scribd_doc.write("embedded_doc#{id}");
           </script>
         END
       end
