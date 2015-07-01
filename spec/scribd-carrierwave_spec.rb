@@ -41,7 +41,7 @@ describe ScribdCarrierWave do
       end
 
     end
-    
+
     describe "upload" do
       it "calls rscribd.upload with the correct arguments" do
         @uploader.stubs(:url).returns('test_url')
@@ -73,7 +73,7 @@ describe ScribdCarrierWave do
         ScribdCarrierWave::upload @uploader
       end
     end
-    
+
     describe "destroy" do
       it "gets the correct document to destroy and calls destroy" do
         @uploader.stubs(:ipaper_id).returns('test_id')
@@ -83,14 +83,14 @@ describe ScribdCarrierWave do
         ScribdCarrierWave::destroy @uploader
       end
     end
-    
+
     describe "full_path" do
       it "returns the full file path for file storage" do
         @uploader.stubs(:url).returns('/test/path.pdf')
         @uploader.stubs(:root).returns('/full/path')
         ScribdCarrierWave::full_path(@uploader).should eq '/full/path/test/path.pdf'
       end
-      
+
       it "returns the url for fog storage" do
         @uploader.stubs(:url).returns('http://www.test.com/file.pdf')
         @uploader.stubs(:root).returns('/full/path')
@@ -104,7 +104,7 @@ describe ScribdCarrierWave do
 
     end
   end
-  
+
   context "instance methods" do
     before(:each) do
       @uploader = CarrierWave::Uploader::Base.new
@@ -114,13 +114,13 @@ describe ScribdCarrierWave do
       @mounted_as = :test_model
       @uploader.stubs(:mounted_as).returns(@mounted_as)
     end
-    
+
     describe "upload_to_scribd" do
       it "calls upload" do
         res = mock
         res.stubs(:doc_id).returns("test_id")
         res.stubs(:access_key).returns("test_access_key")
-        @model.expects(:update_attributes).with(has_entries('test_model_ipaper_id' => 'test_id', 
+        @model.expects(:update_attributes).with(has_entries('test_model_ipaper_id' => 'test_id',
                                                             'test_model_ipaper_access_key' => 'test_access_key'))
                                           .returns true
         ScribdCarrierWave.expects(:upload).with(@uploader).returns(res)
@@ -141,7 +141,7 @@ describe ScribdCarrierWave do
         @uploader.stubs(:ipaper_access_key).returns('test_access_key')
       end
 
-      it "returns an html string with the ipaper_id and ipaper_access_key included" do      
+      it "returns an html string with the ipaper_id and ipaper_access_key included" do
         html = @uploader.display_ipaper
         html.should match /test_id/
         html.should match /test_access_key/
@@ -151,34 +151,34 @@ describe ScribdCarrierWave do
         html = @uploader.display_ipaper({id: 'test_id'})
         html.should match /id="embedded_flashtest_id"/
       end
-      
+
       it "does not add the id as a param" do
         html = @uploader.display_ipaper({id: 'test_id'})
         html.should_not match /scribd_doc.addParam\('id', 'test_id'\)/
       end
-      
+
       it "adds string params correctly" do
         html = @uploader.display_ipaper({test_param: 'test_value'})
         html.should match /scribd_doc.addParam\('test_param', 'test_value'\)/
       end
-      
-      it "adds boolean params correctly" do        
+
+      it "adds boolean params correctly" do
         html = @uploader.display_ipaper({test_param: true})
         html.should match /scribd_doc.addParam\('test_param', true\)/
       end
-      
+
       it "adds integer params correctly" do
         html = @uploader.display_ipaper({test_param: 1})
         html.should match /scribd_doc.addParam\('test_param', 1\)/
       end
     end
-    
+
     describe "fullscreen_url" do
       before(:each) do
         @uploader.stubs(:ipaper_id).returns('test_id')
         @uploader.stubs(:ipaper_access_key).returns('test_access_key')
       end
-      
+
       it "returns the correct url" do
         @uploader.fullscreen_url.should match /http:\/\/www.scribd.com\/fullscreen\/test_id\?access_key=test_access_key/
       end
@@ -197,5 +197,5 @@ describe ScribdCarrierWave do
         @uploader.ipaper_access_key
       end
     end
-  end  
+  end
 end
